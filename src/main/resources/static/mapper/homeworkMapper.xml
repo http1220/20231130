@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.example.demo.repository.HomeworkMapper">
+
+    <resultMap type="com.example.demo.domain.Homework" id="homework">
+        <result property="homeworkNo" column="no"/>
+        <result property="homeworkTitle" column="homework_title"/>
+        <result property="homeworkContent" column="homework_content"/>
+        <result property="progress" column="progress"/>
+        <result property="due" column="due_date"/>
+        <result property="creation" column="creation_date"/>
+        <result property="teacherNo" column="member_no"/>
+    </resultMap>
+
+    <select id="findAll"  resultMap="homework">
+        SELECT ROWNUM() as no, homework_title, homework_content, progress, due_date, creation_date, member_no
+
+        FROM homeworks
+
+        ORDER BY no ASC
+    </select>
+
+    <select id="selectEvaluationList"  parameterType="String"  resultType="HashMap">
+        SELECT rownum() AS no , s.homework_submit_no as submitNo ,m.name as studentName, s.submit_date as submitDate , s.homework_content  as submitContent, s.progress as submitprogress,s.additional_question as addiQu
+        FROM homeworks_submit s JOIN members m ON s.member_no = m.member_no
+        WHERE s.homework_no
+        IN (SELECT h.homework_no FROM homeworks h JOIN members m ON h.member_no = m.member_no WHERE m.name = #{teacherName })
+        ORDER BY no ASC;
+    </select>
+
+    <select id="selectHomeworkListInDB" parameterType="String" resultType="HashMap">
+        SELECT rownum() AS no , h.homework_title as homeworkTitle , h.homework_content as homeworkContent, h.progress , h.due_date as due , h.creation_date as creation, m.name as teacherName
+        FROM homeworks h JOIN members m ON h.member_no = m.member_no
+        WHERE m.name = #{teacherName }
+        ORDER BY no ASC;
+    </select>
+
+    <select id="selectHomeworkListAfterTransfer" parameterType="String" resultType="HashMap">
+        SELECT rownum() AS no , h.homework_title as homeworkTitle, h.homework_content as homeworkContent , h.progress, h.due_date as due, h.creation_date as creation, m.name as studentName
+        FROM homeworks_send se JOIN homeworks h ON h.homework_no = se.homework_no JOIN members m ON se.member_no = m.member_no
+        WHERE h.member_no = (select member_no FROM members WHERE members.name=#{teacherName })
+        ORDER BY no ASC;
+    </select>
+
+
+    <select id="selectStudentInfoByTeacher" parameterType="String" resultType="HashMap">
+        select distinct mem.name as studentName, mem.tel as studentTel, se.current_level as progress
+        from homeworks_send se JOIN members mem ON se.member_no = mem.member_no
+        WHERE se.homework_no IN (SELECT h.homework_no FROM homeworks h JOIN members m ON h.member_no = m.member_no WHERE m.name = #{teacherName })
+
+    </select>
+    
+    <insert id="inserthomeworkdata" parameterType="com.example.demo.dto.HomeworkCreateDto">
+    	INSERT INTO homeworks (homework_title , homework_content , progress , due_date , creation_date , member_no )VALUES ( #{title} , #{content} , #{progress} , #{deadline} , DATE_FORMAT(NOW(), '%Y-%m-%d') , 7); 
+    </insert>
+    
+        
+    <insert id="insertevaluation" parameterType="com.example.demo.dto.EvaluationCreateDto">
+    	UPDATE homeworks_submit SET evaluation = #{evalutionscore} WHERE homework_submit_no = #{submitNo}; 
+    </insert>
+
+
+</mapper>
