@@ -121,21 +121,6 @@
   </style>
 
   <body>
-    <!-- <div class="container">
-      <div class="nav">
-      <span><a href="/admin" style="text-decoration : none;">메인으로</a></span>
-      </div>
-
-      <div class="menu">
-      <ul class="menu_ul">
-      <li><a href="#" style="text-decoration : none;">내 구입 목록</a></li>
-      <li><a href="#" style="text-decoration : none;">숙제 생성</a></li>
-      <li><a href="#" style="text-decoration : none;">숙제 제출</a></li>
-      <li><a href="#" style="text-decoration : none;">숙제 전송</a></li>
-     </ul>
-
-      	</div> -->
-
       <div class="content">
 
         <div class="board">
@@ -143,7 +128,7 @@
             <div class="table-form" id="modal-pa">
               <div class="work-form" style="width: 100%;">
                 <h3>숙제 정보 입력</h3>
-                <form action="/homworkcreate" method="post" style="width: 90%; text-align: center;">
+                <form action="/homeworks/create" method="post" style="width: 90%; text-align: center;">
                   <table>
                     <tr>
                       <th><span>숙제 제목</span></th>
@@ -178,6 +163,7 @@
 
             <div class="table-container" id="modal-pa">
               <div class="table-row heading">
+              	<div class="row-item"><input type="checkbox"></div>
                 <div class="row-item">순서</div>
                 <div class="row-item">숙제 제목</div>
                 <div class="row-item">숙제 내용</div>
@@ -188,6 +174,7 @@
               </div>
               <c:forEach items="${data}" var="i">
               <div class="table-row">
+              	<div class="row-item"><input type="checkbox" name = "homework" value = "${i.homeworkNo}"></input></div>
                 <div class="row-item">${i.no}</div>
                 <div class="row-item">${i.homeworkTitle}</div>
                 <div class="row-item">${i.homeworkContent}</div>
@@ -195,7 +182,6 @@
                 <div class="row-item">${i.due}</div>
                 <div class="row-item">${i.creation}</div>
                 <div class="row-item">${i.teacherName}</div>
-                <!-- <div class="row-item"><button>게시글 삭제</button></div> -->
               </div>
               </c:forEach>
             </div>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.example.demo.repository.PaymentMapper">
+
+      <insert id="addPayment" parameterType="com.example.demo.Domain.Payment">
+    	INSERT INTO payments 
+    	(order_number , game_content_no , member_no , contact , method , payment_date , status , depositor_name)
+    	VALUES 
+    	( #{orderNumber} , #{gameContentNo} , #{memberNo} , #{contact}, #{method}, DATE_FORMAT(NOW(), '%Y-%m-%d-%h:%d:%s'), #{status} , #{depositorName})
+    	; 
+    </insert>
+    
+    <select id="getPaymentHistory" resultType="com.example.demo.Domain.Payment">
+    	SELECT * FROM payments;
+    </select>
+    
+    <select id="findonemember" resultType="com.example.demo.Domain.Member">
+    	select * from members where role = 'TEACHER' limit 0 , 1;
+    </select>
+
+</mapper>

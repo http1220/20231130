@@ -120,9 +120,6 @@
 
     <body>
         <div class="content">
-          <!-- 		<p><span class="title"> -->
-          <!-- 			게시글 관리 -->
-          <!-- 		</span></p> -->
           <div class="board">
             <div class="main-container">
               <div class="table-container-studentgruop" id="modal-pa">
@@ -141,12 +138,12 @@
                 </div>
                 <c:forEach items="${data}" var="i">
                 <div class="table-row">
-                  <div class="row-item" onclick="go_board_detail('${i.no}')">${i.no}</div>
-                  <div class="row-item" onclick="go_board_detail('${i.no}')">${i.homeworkTitle}</div>
-                  <div class="row-item" onclick="go_board_detail('${i.no}')">${i.homeworkContent}</div>
-                  <div class="row-item" onclick="go_board_detail('${i.no}')">${i.progress}</div>
-                  <div class="row-item" onclick="go_board_detail('${i.no}')">${i.due}</div>
-                  <div class="row-item" onclick="go_board_detail('${i.no}')">${i.creation}</div>
+                  <div class="row-item">${i.no}</div>
+                  <div class="row-item">${i.homeworkTitle}</div>
+                  <div class="row-item">${i.homeworkContent}</div>
+                  <div class="row-item">${i.progress}</div>
+                  <div class="row-item">${i.due}</div>
+                  <div class="row-item">${i.creation}</div>
                   <!-- <div class="row-item"><button onclick="boardBan('${i.no}')">게시글 삭제</button></div> -->
                 </div>
                 </c:forEach>
@@ -175,15 +172,14 @@
                 </div>
                 <c:forEach items="${sumbited}" var="i">
                 <div class="table-row">
-                  <div class="row-item" onclick="go_board_detail('${i.no}')">${i.no}</div>
-                  <div class="row-item" onclick="go_board_detail('${i.no}')">${i.studentName}</div>
-                  <div class="row-item" onclick="go_board_detail('${i.no}')">${i.submitDate}</div>
-                  <div class="row-item" onclick="go_board_detail('${i.no}')">${i.submitContent}</div>
-                  <div class="row-item" onclick="go_board_detail('${i.no}')">${i.submitprogress}</div>
-                  <div class="row-item" onclick="go_board_detail('${i.no}')">${i.addiQu}</div>
-                  <div class="row-item" onclick="go_board_detail('${i.submitNo}')"><input type="number" name="evalutionscore" id="sumbit${i.submitNo}" min="0"
+                  <div class="row-item">${i.no}</div>
+                  <div class="row-item">${i.studentName}</div>
+                  <div class="row-item">${i.submitDate}</div>
+                  <div class="row-item">${i.submitContent}</div>
+                  <div class="row-item">${i.submitprogress}</div>
+                  <div class="row-item">${i.addiQu}</div>
+                  <div class="row-item"><input type="number" id="submit_${i.submitNo}" min="0"
                       max="5"></input><button onclick="evaluation(${i.submitNo})">저장</button></div>
-                  <!-- <div class="row-item"><button onclick="boardBan('${i.no}')">게시글 삭제</button></div> -->
                 </div>
                 </c:forEach>
               </div>
@@ -192,22 +188,22 @@
         </div>
 
     </body>
-<script>
+				<script>
 				function evaluation(submitNo){
-					const formdata = new FormData();
-					var idname = 'submit'+submitNo;
-					var score = document.getElementById(idname).value;
-					formdata.append('submitNo' , submitNo);
-					formdata.append('evalutionscore' , score);
-					fetch('/evaluation', {
+					  const formData = new FormData();
+					  const score = document.getElementById('submit_'+submitNo).value;
+					  formData.append('submitno', submitNo);
+					  formData.append('evalutionscore', score);
+					  
+					  fetch('/evaluation', {
 					    method: 'POST',
 					    cache: 'no-cache',
-					    body: formData // body 부분에 폼데이터 변수를 할당
-					})
-					.then((response) => response.json())
-					.then((data) => {
+					    body: formData
+					  })
+					  .then((response) => response.json())
+					  .then((data) => {
 					    console.log(data);
-					};
-				}
+					  });
+					}
 				</script>
     </html>

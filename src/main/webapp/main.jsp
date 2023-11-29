@@ -395,7 +395,7 @@
 
       <div class="menu">
       <ul class="menu_ul">
-      <li><a href="#" title="내 구입 목록" onclick="changeIframeSrc('/payment', '내 구입 목록')"><i class="icon-dashboard"></i><span>내 구입 목록</span></a></li>
+      <li><a href="#" title="내 구입 목록" onclick="changeIframeSrc('/paymenthistory', '내 구입 목록')"><i class="icon-dashboard"></i><span>내 구입 목록</span></a></li>
       <li><a href="#" title="숙제 생성" onclick="changeIframeSrc('/homeworks/homework', '숙제 생성')"><i class="icon-bullhorn"></i><span> 숙제 생성</span></a></li>
       <li><a href="#" title="숙제 전송" onclick="changeIframeSrc('/homeworks/homeworktransfer' , '숙제 전송')"><i class="icon-file-alt"></i><span> 숙제 전송</span></a></li>
       <li><a href="#" title="숙제 전송" onclick="changeIframeSrc('/homeworks/homeworksubmit' , '숙제 제출')"><i class="icon-file-alt"></i><span> 숙제 제출</span></a></li>

@@ -1,13 +1,13 @@
-package com.example.demo.dto;
+package com.example.demo.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-public class HomeworkViewDto {
-
+public class HomeworkView {
     private int no;
+    private int homeworkNo;
     private String homeworkTitle;
     private String homeworkContent;
     private String progress;

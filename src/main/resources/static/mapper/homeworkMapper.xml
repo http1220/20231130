@@ -4,7 +4,7 @@
 
 <mapper namespace="com.example.demo.repository.HomeworkMapper">
 
-    <resultMap type="com.example.demo.domain.Homework" id="homework">
+    <resultMap type="com.example.demo.Domain.Homework" id="homework">
         <result property="homeworkNo" column="no"/>
         <result property="homeworkTitle" column="homework_title"/>
         <result property="homeworkContent" column="homework_content"/>
@@ -18,6 +18,8 @@
         SELECT ROWNUM() as no, homework_title, homework_content, progress, due_date, creation_date, member_no
 
         FROM homeworks
+        
+        WHERE removed = 0
 
         ORDER BY no ASC
     </select>
@@ -31,35 +33,60 @@
     </select>
 
     <select id="selectHomeworkListInDB" parameterType="String" resultType="HashMap">
-        SELECT rownum() AS no , h.homework_title as homeworkTitle , h.homework_content as homeworkContent, h.progress , h.due_date as due , h.creation_date as creation, m.name as teacherName
+        SELECT rownum() AS no ,  h.homework_no AS homeworkNo, h.homework_title as homeworkTitle , h.homework_content as homeworkContent, h.progress , h.due_date as due , h.creation_date as creation, m.name as teacherName
         FROM homeworks h JOIN members m ON h.member_no = m.member_no
-        WHERE m.name = #{teacherName }
+        WHERE m.name = #{teacherName } AND removed = 0
         ORDER BY no ASC;
     </select>
 
     <select id="selectHomeworkListAfterTransfer" parameterType="String" resultType="HashMap">
-        SELECT rownum() AS no , h.homework_title as homeworkTitle, h.homework_content as homeworkContent , h.progress, h.due_date as due, h.creation_date as creation, m.name as studentName
+        SELECT rownum() AS no , h.homework_no AS homeworkNo , h.homework_title as homeworkTitle, h.homework_content as homeworkContent , h.progress, h.due_date as due, h.creation_date as creation, m.name as studentName
         FROM homeworks_send se JOIN homeworks h ON h.homework_no = se.homework_no JOIN members m ON se.member_no = m.member_no
-        WHERE h.member_no = (select member_no FROM members WHERE members.name=#{teacherName })
+        WHERE h.member_no = (select member_no FROM members WHERE members.name=#{teacherName }) AND h.removed = 0
         ORDER BY no ASC;
     </select>
 
-
+<!-- 	학습 그룹이 생성되어야함 -->
     <select id="selectStudentInfoByTeacher" parameterType="String" resultType="HashMap">
-        select distinct mem.name as studentName, mem.tel as studentTel, se.current_level as progress
-        from homeworks_send se JOIN members mem ON se.member_no = mem.member_no
-        WHERE se.homework_no IN (SELECT h.homework_no FROM homeworks h JOIN members m ON h.member_no = m.member_no WHERE m.name = #{teacherName })
+    	select member_no AS studentNo ,name as studentName, tel as studentTel
+        from members
+        where members.role = 'STUDENT';
+<!--         select member_no AS studentNo ,name as studentName, tel as studentTel, se.current_level as progress -->
+<!--         from homeworks_send se JOIN members mem ON se.member_no = mem.member_no -->
+<!--         WHERE se.homework_no IN (SELECT h.homework_no FROM homeworks h JOIN members m ON h.member_no = m.member_no WHERE m.name = #{teacherName }) -->
 
     </select>
     
-    <insert id="inserthomeworkdata" parameterType="com.example.demo.dto.HomeworkCreateDto">
-    	INSERT INTO homeworks (homework_title , homework_content , progress , due_date , creation_date , member_no )VALUES ( #{title} , #{content} , #{progress} , #{deadline} , DATE_FORMAT(NOW(), '%Y-%m-%d') , 7); 
+    <insert id="inserthomeworkdata" parameterType="com.example.demo.ParamObject.HomeworkCreate">
+    	INSERT INTO homeworks 
+    	(homework_title, homework_content , progress , due_date , creation_date , member_no )
+    	VALUES 
+    	( #{title} , #{content} , #{progress} , #{deadline} , DATE_FORMAT(NOW(), '%Y-%m-%d') , #{writer}); 
     </insert>
     
         
-    <insert id="insertevaluation" parameterType="com.example.demo.dto.EvaluationCreateDto">
+    <update id="insertevaluation" parameterType="com.example.demo.ParamObject.EvaluationCreate">
     	UPDATE homeworks_submit SET evaluation = #{evalutionscore} WHERE homework_submit_no = #{submitNo}; 
-    </insert>
+    </update>
+    
+    <delete id="deletehomework" parameterType="int">
+    	UPDATE homeworks SET removed = 1 WHERE homework_no = #{no};
+    </delete>
+
+	<insert id="addhomeworktranfer" parameterType="int">
+		INSERT INTO homeworks_send
+		(homework_no , member_no , current_level , send_date)
+		VALUES
+		(#{homeworkno} , #{studentno} , 5 , DATE_FORMAT(NOW(), '%Y-%m-%d-%h:%m:%s'))
+	</insert>
+	
+	<select id="selectHomeworkBykeyword" parameterType="String" resultType="HashMap">
+		SELECT rownum() AS no ,  h.homework_no AS homeworkNo, h.homework_title as homeworkTitle , h.homework_content as homeworkContent, h.progress , h.due_date as due , h.creation_date as creation, m.name as teacherName
+        FROM homeworks h JOIN members m ON h.member_no = m.member_no
+        WHERE h.homework_title like #{keyword } AND removed = 0
+        ORDER BY no ASC;
+	</select>
+
 
 
 </mapper>

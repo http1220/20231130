@@ -378,53 +378,6 @@
 
       }
     </style>
-    <script>
-      function boardBan(param) {
-        if (window.confirm("정지하시겠습니까?")) {
-          fetch("/admin/boardban", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: JSON.stringify({
-              no: param,
-            }),
-          })
-            .then((result) => console.log(result));
-          alert("완료");
-          location.href = "";
-        }
-
-
-      }
-
-      function go_board_detail(param) {
-        fetch("/admin/boarddetail?board=" + param)
-          .then(res => res.json())
-          .then(function (data) {
-            const modalboard = document.querySelector("#modal_board");
-            modalboard.innerHTML = "";
-            const htmlcode = `
-							<p>게시물번호 : `+ data.no + `</p>
-							<p>닉네임 : `+ data.nickname + `</p>
-							<p>등록일 : `+ data.registrationDate + `</p>
-							<p>조회수 : `+ data.views + `</p>
-							<button><a href="../detail?vehicleno=`+ data.no + `"target='_blank'">게시글로 이동</a></button>
-							`;
-            modalboard.innerHTML = htmlcode;
-
-          });
-
-        const modal = document.querySelector("#modal");
-        modal.classList.toggle("-open");
-
-      }
-
-
-
-    </script>
-
     <body>
       <div class="container">
         <div class="content">
@@ -435,17 +388,14 @@
                   <div class="row-item">상품명</div>
                   <div class="row-item">구독기간</div>
                   <div class="row-item">구매일</div>
-                  <!-- 			      <div class="row-item">차량번호</div> -->
                   <div class="row-item">학습 그룹 등록 내역</div>
                 </div>
                 <c:forEach items="${data}" var="i">
                   <div class="table-row">
-                    <div class="row-item" onclick="go_board_detail('${i.no}')">${i.product}</div>
-                    <div class="row-item" onclick="go_board_detail('${i.no}')">${i.period}</div>
-                    <div class="row-item" onclick="go_board_detail('${i.no}')">${i.date}</div>
-
-                    <div class="row-item" onclick="go_board_detail('${i.no}')">${i.group}</div>
-                    <!-- <div class="row-item"><button onclick="boardBan('${i.no}')">게시글 삭제</button></div> -->
+                    <div class="row-item">${i.productname}</div>
+                    <div class="row-item">${i.period}</div>
+                    <div class="row-item">${i.date}</div>
+                    <div class="row-item">${i.groupname}</div>
                   </div>
                 </c:forEach>
                 <div class="modal" id="modal">
@@ -479,11 +429,4 @@
         </div>
       </div>
     </body>
-    <script>
-      const modal = document.querySelector('#modal');
-      modal.addEventListener('click', () => {
-        modal.classList.toggle('-open')
-      })
-    </script>
-
     </html>

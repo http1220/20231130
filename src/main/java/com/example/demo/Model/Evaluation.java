@@ -1,20 +1,20 @@
-package com.example.demo.domain;
+package com.example.demo.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-@Data
-public class Sumbit {
+
+public class Evaluation {
+
+    private int no;
     private int submitNo;
-    private int homeworkNo;
-    private int studentNo;
     private String studentName;
-    private String content;
-    private String question;
     @DateTimeFormat(pattern = "YYYY-MM-DD")
     @JsonFormat(pattern = "YYYY-MM-DD")
     private LocalDate submitDate;
-    private String evaluation;
+
+    private String submitContent;
+    private String submitprogress;
+    private String addiQu;
 }
